@@ -16,14 +16,14 @@
 Fake store api
 
 #### /api/products
-![all](/images/all.png)
+![all](./images/all.png)
 
 
 #### /api/productos/2
-![all](/images/getId.png)
+![all](./images/getId.png)
 
 #### /api/products
-![all](/images/create.png)
+![all](./images/create.png)
 
 
 
