@@ -1,0 +1,25 @@
+# server
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: fake_api
+  profiles:
+    active: ${SPRING_PROFILE_ACTIVE:local}
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/fake_api
+    username: ${POSTGRES_DATASOURCE_USER}
+    password: ${POSTGRES_DATASOURCE_PASSWORD}
+
+    hikari:
+      maximum-pool-size: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
