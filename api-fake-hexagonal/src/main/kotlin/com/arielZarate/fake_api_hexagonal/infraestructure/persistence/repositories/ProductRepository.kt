@@ -7,7 +7,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface ProductRepository:JpaRepository<ProductEntity,Int> {
-
-    //podria existir otros metodos personalizados
-    //podria existir otros metodos personalizados
 }

@@ -5,10 +5,10 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "product")
-data class ProductEntity (
+data class ProductEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int=0,
+    val id: Int = 0,
     val title: String,
     val price: Double,
     @Column(length = 700)
@@ -16,12 +16,11 @@ data class ProductEntity (
     val category: String,
     val image: String,
     @Embedded
-    val rating:RatingEntity
-){
+    val rating: RatingEntity
+) {
 
-
-    //jpa te pide cun cosntructor sin paranetros
-    constructor():this(
+    //constructor sin arg
+    constructor() : this(
         id = 0,
         title = "",
         price = 0.0,

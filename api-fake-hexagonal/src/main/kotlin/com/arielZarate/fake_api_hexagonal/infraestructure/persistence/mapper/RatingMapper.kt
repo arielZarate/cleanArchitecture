@@ -6,10 +6,8 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class RatingEntityMapper {
+class RatingMapper {
 
-
-    //convierte de Product.Rating a RatingEntity
     fun toEntity(rating:Product.Rating):RatingEntity{
         return RatingEntity(
             rate = rating.rate,
@@ -17,8 +15,6 @@ class RatingEntityMapper {
         )
     }
 
-
-    //  // Convierte RatingEntity a Product.Rating (dominio)
     fun toDomain(ratingEntity: RatingEntity):Product.Rating{
        return Product.Rating(
            rate=ratingEntity.rate,

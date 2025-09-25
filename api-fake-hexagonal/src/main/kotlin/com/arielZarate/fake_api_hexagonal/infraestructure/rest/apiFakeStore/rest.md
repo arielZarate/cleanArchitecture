@@ -37,3 +37,6 @@ fetch('https://fakestoreapi.com/products')
             ]
         
 ```
+
+
+Nota: la idea es consumir la api y traer todos los  prducts desde la api de `fakestoreapi`
