@@ -1,7 +1,7 @@
 package com.arielZarate.fake_api_hexagonal.infraestructure.rest
 
 import com.arielZarate.fake_api_hexagonal.domain.model.Product
-import com.arielZarate.fake_api_hexagonal.infraestructure.rest.mapper.ProductMapper
+import com.arielZarate.fake_api_hexagonal.infraestructure.rest.mapper.ProductRestMapper
 import com.arielZarate.fake_api_hexagonal.infraestructure.rest.model.ProductDto
 import com.arielZarate.fake_api_hexagonal.infraestructure.rest.provider.WebClientMethod
 import com.arielZarate.fake_api_hexagonal.infraestructure.rest.provider.WebClientProvider
@@ -11,17 +11,17 @@ import java.net.URI
 @Component
 class ApiFakeStoreClient(
     private val webClientProvider: WebClientProvider,
-    private val productMapper: ProductMapper
+    private val productMapper: ProductRestMapper
 ) {
 
-    val urlBase = "https://fakestoreapi.com"
+    
 
     fun getAllProducts(): List<Product> {
         val response: Array<ProductDto> = webClientProvider.applyWithoutBody(
             clientName = "FakeStoreAPI",
             method = WebClientMethod.GET,
-            uri = URI("$urlBase/products"),
-            timeout = 10000L,
+            uri = URI("/products"),
+            timeout = 50000L,
             headers = null,
             responseTypeReference = Array<ProductDto>::class.java
         )
@@ -32,8 +32,8 @@ class ApiFakeStoreClient(
         val response: ProductDto = webClientProvider.applyWithoutBody(
             clientName = "FakeStoreAPI",
             method = WebClientMethod.GET,
-            uri = URI("$urlBase/products/$id"),
-            timeout = 10000L,
+            uri = URI("/products/$id"),
+            timeout = 50000L,
             headers = null,
             responseTypeReference = ProductDto::class.java
         )

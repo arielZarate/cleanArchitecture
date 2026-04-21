@@ -4,8 +4,8 @@ import jakarta.persistence.Embeddable
 
 @Embeddable
 data class RatingEntity(
-    val rate: Double,
-    val count: Int
-){
-    constructor():this(0.0,0)
+    var rate: Double,
+    var count: Int
+) {
+    constructor() : this(0.0, 0)
 }

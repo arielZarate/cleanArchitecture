@@ -6,14 +6,14 @@ import com.arielZarate.fake_api_hexagonal.infraestructure.rest.model.RatingDto
 import org.springframework.stereotype.Component
 
 @Component
-class ProductMapper {
+class ProductRestMapper {
 
     fun toDomain(dto: ProductDto): Product {
         return Product(
             id = dto.id,
-            title = dto.title,
+            title = dto.title.take(255),
             price = dto.price,
-            description = dto.description,
+            description = dto.description.take(700),
             category = dto.category,
             image = dto.image,
             rating = Product.Rating(dto.rating.rate, dto.rating.count)

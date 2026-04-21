@@ -1,28 +1,28 @@
 package com.arielZarate.fake_api_hexagonal.application
 
 import com.arielZarate.fake_api_hexagonal.domain.model.Product
-import com.arielZarate.fake_api_hexagonal.domain.ports.`in`.GetProductService
-import com.arielZarate.fake_api_hexagonal.domain.ports.out.ProductsPortOut
+import com.arielZarate.fake_api_hexagonal.domain.ports.`in`.ProductService
+import com.arielZarate.fake_api_hexagonal.domain.ports.out.ProductProvider
 import org.springframework.stereotype.Service
 
 
 @Service
-class GetProductUseCase(
+class ProductUseCase(
     // nota: podria crear un servicio en domain que maneje alguna logiva o validacion si hiciese falta
-    private val productsPortOut: ProductsPortOut
-) : GetProductService {
+    private val productProvider: ProductProvider
+) : ProductService {
 
     override fun getProductById(id: Int): Product? {
-        return productsPortOut.findProductById(id)
+        return productProvider.findProductById(id)
 
     }
 
     override fun getAllProducts(): List<Product> {
-        return productsPortOut.getAllProducts()
+        return productProvider.getAllProducts()
     }
 
     override fun createProduct(product: Product): Product {
-        return productsPortOut.saveProduct(product);
+        return productProvider.saveProduct(product);
     }
 
 }

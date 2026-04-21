@@ -2,7 +2,7 @@ package com.arielZarate.fake_api_hexagonal.domain.ports.out
 
 import com.arielZarate.fake_api_hexagonal.domain.model.Product
 
-interface ProductsPortOut {
+interface ProductProvider {
 
     fun findProductById(id: Int): Product?
 

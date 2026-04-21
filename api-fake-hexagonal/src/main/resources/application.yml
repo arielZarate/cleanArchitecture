@@ -6,7 +6,7 @@ server:
 
 spring:
   application:
-    name: fake_api
+    name: api-fake-hexagonal
   profiles:
     active: local
 

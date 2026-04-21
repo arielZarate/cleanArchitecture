@@ -1,7 +1,7 @@
 package com.arielZarate.fake_api_hexagonal.application
 
 import com.arielZarate.fake_api_hexagonal.domain.model.Product
-import com.arielZarate.fake_api_hexagonal.domain.ports.out.ProductsPortOut
+import com.arielZarate.fake_api_hexagonal.domain.ports.out.ProductProvider
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
@@ -15,8 +15,8 @@ import org.instancio.Instancio
 class GetProductUseCaseTest:StringSpec({
 
 
-    val productsPortOut = mockk<ProductsPortOut>()  //mockk de salida
-    val getProductUseCase = GetProductUseCase(productsPortOut)
+    val productProvider = mockk<ProductProvider>()  //mockk de salida
+    val getProductUseCase = ProductUseCase(productProvider)
 
 
     //antes de iniciar
@@ -30,14 +30,14 @@ class GetProductUseCaseTest:StringSpec({
 
          val product = Instancio.of(Product::class.java).create()
 
-         every { product.id?.let { productsPortOut.findProductById(it) } } returns product
+         every { product.id?.let { productProvider.findProductById(it) } } returns product
 
          // WHEN
          val result = getProductUseCase.getProductById(product.id ?: 1)
 
          result shouldBe product
 
-         verify { product.id?.let { productsPortOut.findProductById(it) } }
+         verify { product.id?.let { productProvider.findProductById(it) } }
 
      }
 
@@ -49,14 +49,14 @@ class GetProductUseCaseTest:StringSpec({
 
         // GIVEN
         val products = Instancio.ofList(Product::class.java).size(2).create()
-        every { productsPortOut.getAllProducts() } returns products
+        every { productProvider.getAllProducts() } returns products
 
         // WHEN
         val result = getProductUseCase.getAllProducts()
 
         // THEN
         result.size shouldBe 2
-        verify { productsPortOut.getAllProducts() }
+        verify { productProvider.getAllProducts() }
     }
 
 

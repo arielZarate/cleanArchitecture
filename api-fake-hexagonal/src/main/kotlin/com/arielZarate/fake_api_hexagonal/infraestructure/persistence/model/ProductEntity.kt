@@ -5,30 +5,20 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "product")
-data class ProductEntity(
+class ProductEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
-    val title: String,
-    val price: Double,
+    var id: Int = 0,
+    var title: String,
+    var price: Double,
     @Column(length = 700)
-    val description: String,
-    val category: String,
-    val image: String,
+    var description: String,
+    var category: String,
+    var image: String,
     @Embedded
-    val rating: RatingEntity
+    var rating: RatingEntity
 ) {
 
-    //constructor sin arg
-    constructor() : this(
-        id = 0,
-        title = "",
-        price = 0.0,
-        description = "",
-        category = "",
-        image = "",
-        rating = RatingEntity()
-    )
 
 }
 

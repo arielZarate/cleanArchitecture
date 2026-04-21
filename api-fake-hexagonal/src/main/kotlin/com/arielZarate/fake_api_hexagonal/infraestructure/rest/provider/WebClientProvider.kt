@@ -1,7 +1,6 @@
 package com.arielZarate.fake_api_hexagonal.infraestructure.rest.provider
 
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
@@ -22,24 +21,32 @@ class WebClientProvider(
         headers: Map<String, String>?,
         responseTypeReference: Class<R>
     ): R {
-        val methodName = method.name
-        log.info("Calling {} {} {}", clientName, methodName, uri)
+        val path = uri.path
+        log.info("Calling {} {} {}", clientName, method.name, path)
 
-        return webClient
-            .method(HttpMethod.valueOf(methodName))
-            .uri(uri)
-            .headers { header ->
-                headers?.forEach { (k, v) -> header.set(k, v) }
-            }
+        val requestSpec = when (method) {
+            WebClientMethod.GET -> webClient.get()
+            WebClientMethod.POST -> webClient.post()
+            WebClientMethod.PUT -> webClient.put()
+            WebClientMethod.DELETE -> webClient.delete()
+            WebClientMethod.PATCH -> webClient.patch()
+        }
+
+        var uriSpec = requestSpec.uri(path)
+        if (headers != null) {
+            uriSpec = uriSpec.headers { h -> headers.forEach { (k, v) -> h.set(k, v) } }
+        }
+
+        return uriSpec
             .retrieve()
             .onStatus({ statusCode -> statusCode.isError }) { response ->
-                log.error("Call to {} response ERROR {} {}", clientName, methodName, uri)
+                log.error("Call to {} response ERROR {} {}", clientName, method.name, path)
                 Mono.error(WebClientException("Error calling $clientName: ${response.statusCode()}"))
             }
             .bodyToMono(responseTypeReference)
             .timeout(Duration.ofMillis(timeout))
             .onErrorResume({ ex: Throwable ->
-                log.error("Call TIMEOUT {} {} - {}", methodName, uri, ex.message)
+                log.error("Call TIMEOUT {} {} - {}", method.name, path, ex.message)
                 Mono.error(WebClientException("Timeout calling $clientName", ex))
             })
             .block()!!
