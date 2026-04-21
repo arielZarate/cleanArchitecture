@@ -25,14 +25,4 @@ class GetProductUseCase(
         return productsPortOut.saveProduct(product);
     }
 
-    /*
-//private val products = MockProducts.getMockProducts()
-override fun getProductById(id: Int): Product? {
-    return products.find{it.id==id}
-}
-
-override fun getAllProducts(): List<Product> {
-    return products
-}
-* */
 }

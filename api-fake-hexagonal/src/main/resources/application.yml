@@ -8,12 +8,12 @@ spring:
   application:
     name: fake_api
   profiles:
-    active: ${SPRING_PROFILE_ACTIVE:local}
+    active: local
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/fake_api
-    username: ${POSTGRES_DATASOURCE_USER}
-    password: ${POSTGRES_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/fake_store
+    username: postgres
+    password: 1111
 
     hikari:
       maximum-pool-size: 5
