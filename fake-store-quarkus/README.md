@@ -1,15 +1,133 @@
-# fake-store-quarkus
+
+# 🏗️ Quarkus Hexagonal Architecture - Fake Store API Integration
+
+Este proyecto implementa una **Arquitectura Hexagonal (Ports & Adapters)** utilizando **Quarkus 3** y **Java 21**, basado en el diseño de mi proyecto previo `api-fake-hexagonal`. Demuestra un desacoplamiento total entre la lógica de negocio y la infraestructura (PostgreSQL y APIs externas).
+
+
+Consume la API de **FakeStoreAPI** y guarda los productos en **PostgreSQL**.
+
+## 📖 Related Guides & Extensions
+
+Este proyecto utiliza las siguientes capacidades de **Quarkus**:
+
+* **Mutiny 🔄**: Programación reactiva con la librería moderna Mutiny para flujos de datos asíncronos.
+* **REST (Jackson) 📦**: Implementación de **Jakarta REST** con soporte completo para serialización y deserialización de JSON mediante Jackson.
+* **REST Client 📞**: Cliente especializado para invocar servicios REST externos de forma sencilla y tipada.
+* **Hibernate ORM with Panache 💾**: Simplificación de la capa de persistencia mediante el patrón **Repository**, reduciendo el código repetitivo (*boilerplate*).
+* **JDBC Driver - PostgreSQL 🐘**: Conector oficial y optimizado para bases de datos PostgreSQL.
+* **OpenID Connect (OIDC) 🔐**: Configuración preparada para la seguridad del sistema mediante la verificación de **Bearer tokens**.
+
+
+
+## Arquitectura Hexagonal
+
+```
+src/main/java/org/arielzarate/
+├── domain/
+│   ├── model/Product.java              # Entidad del dominio
+│   └── ports/
+│       ├── in/ProductService.java      # Puerto IN (casos de uso)
+│       └── out/ProductProvider.java    # Puerto OUT
+├── application/
+│   └── ProductUseCase.java            # Implementa ProductService
+├── interfaces/
+│   └── rest/
+│       ├── ProductController.java     # REST controller
+│       ├── dto/
+│       │   ├── ProductRequest.java
+│       │   └── ProductResponse.java
+│       ├── mapper/ProductMapper.java
+│       └── error/
+│           ├── GlobalExceptionHandler.java
+│           ├── ApiErrorResponse.java
+│           └── exception/
+│               ├── CustomException.java
+│               └── WebClientException.java
+└── infrastructure/
+    ├── adapters/
+    │   ├── ProductAdapter.java         # Adapter (BD + API)
+    │   └── mappers/ProductEntityMapper.java
+    ├── persistence/
+    │   ├── entity/ProductEntity.java
+    │   └── repository/ProductRepository.java
+    └── rest/
+        ├── client/ApiFakeStoreClient.java
+        ├── dto/ProductDto.java
+        ├── mapper/ProductRestMapper.java
+        └── provider/
+            ├── WebClientMethod.java
+            └── WebClientProvider.java
+```
+
+
+
+### application.properties
+
+```properties
+# Database
+quarkus.datasource.db-kind=postgresql
+quarkus.datasource.username=postgres
+quarkus.datasource.password=1111
+quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/fake_store_quarkus
+# Hibernate
+quarkus.hibernate-orm.database.generation=drop-and-create
+# Disable Dev Services
+quarkus.oidc.devservices.enabled=false
+```
+
+## API Endpoints
+
+| Método | Endpoint         | Descripción                                      |
+|--------|------------------|--------------------------------------------------|
+| GET    | `/products`      | Listar todos (si BD vacía, consume API y guarda) |
+| GET    | `/products/{id}` | Buscar por ID (solo BD)                          |
+| POST   | `/products`      | Crear producto (guarda en BD)                    |
+
+## Ejemplos de uso
+
+```bash
+# Listar todos los productos
+curl http://localhost:8080/products
+
+# Buscar producto por ID
+curl http://localhost:8080/products/1
+
+# Crear producto
+curl -X POST http://localhost:8080/products \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Test Product",
+    "price": 99.99,
+    "description": "Test description",
+    "category": "test",
+    "image": "https://example.com/image.jpg",
+    "rating": {
+      "rate": 4.5,
+      "count": 100
+    }
+  }'
+```
+
+## Ejecutar
+
+```bash
+./mvnw quarkus:dev
+```
+
+Accede a **Dev UI:** http://localhost:8080/q/dev/
+
+#####  [️ariel-zarate@gitHub](https://github.com/arielZarate?tab=repositories)
+
+
+
+
+
+----
+----
+
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
-
-## Running the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
-
-```shell script
-./mvnw quarkus:dev
 ```
 
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
@@ -100,118 +218,10 @@ Easily start your RESTful Web Services
 [Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
 
 ---
+---
 
-# Proyecto: Fake Store Quarkus
+---
+> ### 👤 Proyecto desarrollado por **[Ariel Zarate](https://github.com/arielZarate)** | 2026 🚀
 
-## Descripción
-
-Proyecto **Quarkus** con arquitectura **Hexagonal** (Clean Architecture), basado en el proyecto Kotlin
-`api-fake-hexagonal`.
-
-Consume la API de **FakeStoreAPI** y guarda los productos en **PostgreSQL**.
-
-## Arquitectura Hexagonal
-
-```
-src/main/java/org/arielzarate/
-├── domain/
-│   ├── model/Product.java              # Entidad del dominio
-│   └── ports/
-│       ├── in/ProductService.java      # Puerto IN (casos de uso)
-│       └── out/ProductProvider.java    # Puerto OUT
-├── application/
-│   └── ProductUseCase.java            # Implementa ProductService
-├── interfaces/
-│   └── rest/
-│       ├── ProductController.java     # REST controller
-│       ├── dto/
-│       │   ├── ProductRequest.java
-│       │   └── ProductResponse.java
-│       ├── mapper/ProductMapper.java
-│       └── error/
-│           ├── GlobalExceptionHandler.java
-│           ├── ApiErrorResponse.java
-│           └── exception/
-│               ├── CustomException.java
-│               └── WebClientException.java
-└── infrastructure/
-    ├── adapters/
-    │   ├── ProductAdapter.java         # Adapter (BD + API)
-    │   └── mappers/ProductEntityMapper.java
-    ├── persistence/
-    │   ├── entity/ProductEntity.java
-    │   └── repository/ProductRepository.java
-    └── rest/
-        ├── client/ApiFakeStoreClient.java
-        ├── dto/ProductDto.java
-        ├── mapper/ProductRestMapper.java
-        └── provider/
-            ├── WebClientMethod.java
-            └── WebClientProvider.java
-```
-
-## Configuración
-
-- **Framework:** Quarkus 3.34.5
-- **Java:** 21
-- **Lombok:** 1.18.30
-- **Persistencia:** Hibernate ORM + Panache + PostgreSQL
-
-### application.properties
-
-```properties
-# Database
-quarkus.datasource.db-kind=postgresql
-quarkus.datasource.username=postgres
-quarkus.datasource.password=1111
-quarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/fake_store_quarkus
-# Hibernate
-quarkus.hibernate-orm.database.generation=drop-and-create
-# Disable Dev Services
-quarkus.oidc.devservices.enabled=false
-```
-
-## API Endpoints
-
-| Método | Endpoint         | Descripción                                      |
-|--------|------------------|--------------------------------------------------|
-| GET    | `/products`      | Listar todos (si BD vacía, consume API y guarda) |
-| GET    | `/products/{id}` | Buscar por ID (solo BD)                          |
-| POST   | `/products`      | Crear producto (guarda en BD)                    |
-
-## Ejemplos de uso
-
-```bash
-# Listar todos los productos
-curl http://localhost:8080/products
-
-# Buscar producto por ID
-curl http://localhost:8080/products/1
-
-# Crear producto
-curl -X POST http://localhost:8080/products \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Test Product",
-    "price": 99.99,
-    "description": "Test description",
-    "category": "test",
-    "image": "https://example.com/image.jpg",
-    "rating": {
-      "rate": 4.5,
-      "count": 100
-    }
-  }'
-```
-
-## Ejecutar
-
-```bash
-./mvnw quarkus:dev
-```
-
-Accede a **Dev UI:** http://localhost:8080/q/dev/
-
-#####  [️ariel-zarate@gitHub](https://github.com/arielZarate?tab=repositories)
 
 
